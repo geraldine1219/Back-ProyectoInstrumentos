@@ -2,7 +2,7 @@
 
 import { Request, Response } from "express";
 import { guardarAula, ObtenerAula, ListarAula, ListarAulaNameId } from "../service/aulas.service";
-import { ObtenerEdifico } from "../service/edificio.service";
+import { obtenerEdificio } from "../service/edificio.service";
 
 export const addAlumnoController = async (req: Request, res: Response) => {
 
@@ -16,7 +16,7 @@ export const addAlumnoController = async (req: Request, res: Response) => {
         res.status(400).json({ message: "Faltan campos obligatorios" });
     }
 
-    const edificio = await ObtenerEdifico(idEdificio);
+    const edificio = await obtenerEdificio(idEdificio);
     
     if (!edificio) {
         res.status(400).json({ text: "El edificio no se encuentra registrado", data: {} });

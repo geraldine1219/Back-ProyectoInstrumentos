@@ -1,10 +1,12 @@
 import { Router } from "express";
-import { loginProfesorController, addProfesorController, getProfesorController, 
+import { loginProfesorController22, addProfesorController, getProfesorController, 
     listProfesorController, listProfesorNameIdController, listAlumnoProfesor } from "../controller/profesor.controller";
 
 const router = Router();
 
-router.post("/login", loginProfesorController);
+// router.post("/login", loginProfesorController22);
+router.post("/login", loginProfesorController22);
+
 
 router.get("/get/:idProfesor", getProfesorController);
 router.post("/add", addProfesorController);

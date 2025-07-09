@@ -126,7 +126,7 @@ export const ObtenerProfesor = async (idProfesor?: number, email?: string): Prom
     const result = await request.query(query);
     const data = result.recordset;
 
-    return data.length > 0 ? data[0] : null;
+    return data.length ? data[0] : null;
   } catch (error) {
     console.error('❌ Error al obtener profesor:', error);
     return {};

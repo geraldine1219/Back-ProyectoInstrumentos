@@ -3,36 +3,36 @@ import bcrypt from "bcrypt";
 import { guardarProfesor, ObtenerProfesor, ListarProfesores, 
     ListarProfesoresNameId, ListarAlumnosProfesor } from "../service/profesor.service"
 
-export const loginProfesorController = async (req: Request, res: Response) => {
-
+export const loginProfesorController22 = async (req: Request, res: Response): Promise<void>  => {
   const { email, contraseña} = req.body;
+  
+    try {
+      if (!email || !contraseña) {
+          res.status(400).json({ text: "Correo and Contraseña are required", data: {} });
+      }else{
+  
+          const alumno = await ObtenerProfesor(undefined, email);
+  
+          if (!alumno || typeof alumno !== "object" || !("contraseña" in alumno)) {
+             res.status(400).json({ text: "El usuario no se encuentra registrado", data: {} });
+            }else{
+                const { contraseña, ...infoAlumno } = alumno;
+                const isMatch = await bcrypt.compare(req.body.contraseña, contraseña || "");
+                
+                if (isMatch){
+                    res.status(200).json({text:"Usuario Encontrado",data:infoAlumno});
+                }else{
+                    res.status(400).json({text:"La contraseña no coincide",data:{}});
+                }
+            }
 
-  try {
-    if (!email || !contraseña) {
-        res.status(400).json({ text: "Correo and Contraseña are required", data: {} });
-    }else{
-
-        const alumno = await ObtenerProfesor(undefined, email);
-
-        if (!alumno) {
-            res.status(400).json({ text: "El usuario no se encuentra registrado" });
-        }
-
-        const { contraseña, ...infoAlumno } = alumno;
-        const isMatch = await bcrypt.compare(req.body.contraseña, contraseña || "");
-        
-        if (isMatch){
-            res.status(200).json({text:"Usuario Encontrado",data:infoAlumno});
-        }else{
-            res.status(400).json({text:"La contraseña no coincide",data:{}});
-        }
-
+      }
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ text: "Internal server error", data: {} });
     }
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ text: "Internal server error", data: {} });
-  }
-}
+};
+
 
 export const addProfesorController = async (req: Request, res: Response) => {
 

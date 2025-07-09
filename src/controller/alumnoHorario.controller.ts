@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 
-import { guardarAlumnoHorario, getHorarioAlumnoNameId  } from "../service/alumnoHorario.service"
+import { guardarAlumnoHorario, getHorarioAlumnoNameId, getHorarioProfesorNameId  } from "../service/alumnoHorario.service"
 
 export const addAlumnoHorarioController = async (req: Request, res: Response) => {
 
@@ -65,6 +65,30 @@ export const getAlumnoHorarioController = async (req: Request, res: Response) =>
         res.status(200).json({
             message: 'Busqueda Completada',
             alumnoHorario: result,
+        });
+
+    } catch (error) {
+        console.error("Error al buscar alumno:", error);
+        res.status(500).json({ message: "Error interno del servidor" });
+    }
+
+}
+
+export const getProfesorHorarioController = async (req: Request, res: Response) => {
+
+    const { idProfesor } = req.params;
+    
+    if (!idProfesor) {
+        res.status(400).json({ message: "Debes proporcionar el idAlumno para buscar." });
+    }
+
+    try {
+
+        const result = await getHorarioProfesorNameId(idProfesor);
+
+        res.status(200).json({
+            message: 'Busqueda Completada',
+            profesorHorario: result,
         });
 
     } catch (error) {

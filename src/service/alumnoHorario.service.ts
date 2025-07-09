@@ -148,3 +148,47 @@ export const getHorarioAlumnoNameId = async (idAlumno: string): Promise<AlumnoHo
     return null;
   }
 };
+
+
+export const getHorarioProfesorNameId = async (idProfesor: string): Promise<AlumnoHorarioInterfaz[] | null> => {
+  try {
+    const db = await getDB();
+
+    const query = `
+      SELECT 
+        prof.idProfesor as idProfesor,
+        dia,
+        hour,
+        nombreAsignatura,
+        horasRequeridas,
+        prof.nombre AS nombreProfesor,
+        prof.apellido AS apellidoProfesor,
+        prof.email AS emailProfesor,
+        prof.telefonoContacto AS telefonoContactoProfesor,
+        prof.profesorescol AS especialidadProfesor,
+        aul.nombre AS nombreAula,
+        aul.disponibilidadOrdenador,
+        edif.direccion,
+        aul.tipo
+      FROM profesores prof
+        INNER JOIN clases class ON class.idProfesor = prof.idProfesor
+        INNER JOIN asignaturas asing ON asing.idAsignatura = class.idAsignatura
+        INNER JOIN horarios hor ON hor.idClase = class.idClase
+        INNER JOIN aulas aul ON aul.idAula = hor.idAula
+        INNER JOIN edificios edif ON aul.idEdificio = edif.idEdificio
+
+      WHERE prof.idProfesor = @idProfesor
+    `;
+
+    const result = await db.request()
+      .input('idProfesor', sql.Int, parseInt(idProfesor))
+      .query(query);
+
+    const data = result.recordset;
+
+    return data.length ? data : null;
+  } catch (error) {
+    console.error('❌ Error al obtener horario del alumno:', error);
+    return null;
+  }
+};

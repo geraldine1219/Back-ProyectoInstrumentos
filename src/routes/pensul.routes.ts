@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { addPensulController, listAlumnoNameIdController, listPensulController } from "../controller/pensul.controller";
+import { addPensulController, listAlumnoNameIdController, listPensulController, listAlumnoProfesorController } from "../controller/pensul.controller";
 
 const router = Router();
 
@@ -7,5 +7,6 @@ const router = Router();
 router.post("/add", addPensulController);
 router.get("/list", listPensulController);
 router.get("/listNameId", listAlumnoNameIdController);
+router.get("/listAlumnos/:idProfesor", listAlumnoProfesorController);
 
 export default router;

@@ -190,3 +190,37 @@ export const ListarPensulsAlumno = async (idAlumno: string): Promise<PensulInter
     return null;
   }
 };
+
+
+export const ListarPensulsAlumnosProfesor = async (idProfesor:string): Promise<PensulInterfaz[] | null> => {
+  try {
+    const db = await getDB();
+
+    const query = `
+      SELECT 
+        alumn.idAlumno, 
+        pen.idPensul,
+        class.idClase,
+        pen.nota,
+        alumn.nombre as nombreAlumno,
+        alumn.apellido as apellidoAlumno,
+        asig.nombreAsignatura
+      FROM pensuls pen
+      INNER JOIN alumnos alumn ON alumn.idAlumno = pen.idAlumno
+      INNER JOIN clases class ON pen.idClase = class.idClase
+      INNER JOIN profesores prof ON prof.idProfesor = class.idProfesor
+      INNER JOIN asignaturas asig ON asig.idAsignatura = class.idAsignatura
+      WHERE prof.idProfesor = @idProfesor
+    `;
+
+    const result = await db.request()
+      .input('idProfesor', sql.VarChar(45), idProfesor)
+      .query(query);
+    const data = result.recordset;
+
+    return data.length ? data : null;
+  } catch (error) {
+    console.error('❌ Error al listar pensuls:', error);
+    return null;
+  }
+};
